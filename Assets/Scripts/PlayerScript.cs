@@ -10,22 +10,14 @@ public class PlayerScript : MonoBehaviour
     
     private MessScript _currentlyCleaning;
 
-
     [SerializeField] private float movementSpeed = 4;
     
     private KeyCode _cleanButton = KeyCode.E;
-
     private KeyCode _scrubButton1 = KeyCode.Q;
     private KeyCode _scrubButton2 = KeyCode.E;
     private bool _scrubState; // if false, press scrub button 1, else, press scrub button 2
 
     private bool _isCleaning = false;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
