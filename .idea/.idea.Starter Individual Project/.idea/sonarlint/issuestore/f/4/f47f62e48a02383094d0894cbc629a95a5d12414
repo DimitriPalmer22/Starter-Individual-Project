@@ -1,5 +1,6 @@
 
 Hcsharpsquid:S3903"+Move 'PlayerScript' into a named namespace.(’¨¼Ÿ
-›csharpsquid:S1186"yAdd a nested comment explaining why this method is empty, throw a 'NotSupportedException' or complete the implementation.(ûàîºûÿÿÿÿ
+›csharpsquid:S1186"yAdd a nested comment explaining why this method is empty, throw a 'NotSupportedException' or complete the implementation.(ûàîºûÿÿÿÿ
 Acsharpsquid:S2933"Make '_cleanButton' 'readonly'.(Ø¿Âäøÿÿÿÿ
-?csharpsquid:S3626r"Remove this redundant jump.(ûÁİ…8ùå®ÉÒ1
+Icsharpsquid:S2933" Make '_scrubButton1' 'readonly'.(Ü—ûüşÿÿÿÿ8—†ÂÉÒ1
+Dcsharpsquid:S2933" Make '_scrubButton2' 'readonly'.(“º¬Ö8—†ÂÉÒ1

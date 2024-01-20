@@ -15,6 +15,10 @@ public class PlayerScript : MonoBehaviour
     
     private KeyCode _cleanButton = KeyCode.E;
 
+    private KeyCode _scrubButton1 = KeyCode.Q;
+    private KeyCode _scrubButton2 = KeyCode.E;
+    private bool _scrubState; // if false, press scrub button 1, else, press scrub button 2
+
     private bool _isCleaning = false;
     
     // Start is called before the first frame update
@@ -56,10 +60,7 @@ public class PlayerScript : MonoBehaviour
     private void ProximityCheck()
     {
         if (_isCleaning)
-        {
-            _currentlyCleaning = null;
             return;
-        }
         
         // Get all mess objects
         var messObjects = GameObject.FindGameObjectsWithTag("Mess");
@@ -78,7 +79,6 @@ public class PlayerScript : MonoBehaviour
 
         // test to see if it is in range
         var messDistance = Vector2.Distance(transform.position, closestMess.transform.position);
-        Debug.Log($"PROXIMITY: {messDistance}");
         if (messDistance > MessCleanProximity)
         {
             _currentlyCleaning = null;
@@ -98,7 +98,7 @@ public class PlayerScript : MonoBehaviour
         if (_isCleaning || _currentlyCleaning == null)
             return;
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(_cleanButton))
         {
             _isCleaning = true;
         }
@@ -113,6 +113,26 @@ public class PlayerScript : MonoBehaviour
         if (!_isCleaning || _currentlyCleaning == null)
             return;
         
+        bool doneCleaning = false;
+
+        // Press Q when prompted
+        bool qPressedProperly = !_scrubState && Input.GetKeyDown(_scrubButton1);
+        // Press E when prompted
+        bool ePressedProperly = _scrubState && Input.GetKeyDown(_scrubButton2);
         
+        // Scrub the mess
+        if (qPressedProperly || ePressedProperly)
+        {
+            doneCleaning = _currentlyCleaning.Scrub();
+            _scrubState = !_scrubState;
+        }   
+        
+        if (!doneCleaning)
+            return;
+        
+        // If the player is done cleaning the mess,
+        // release the player from isCleaning and allow them to move again
+        _isCleaning = false;
+        _currentlyCleaning = null;
     }
 }

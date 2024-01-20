@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MessScript : MonoBehaviour
 {
+
+    private int _health = 8;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -15,4 +18,25 @@ public class MessScript : MonoBehaviour
     {
         
     }
+
+    /// <summary>
+    /// Take away 1 health from this mess.
+    /// This function is only supposed to be called by the player script.
+    /// </summary>
+    /// <returns>A boolean representing whether this mess is fully clean.</returns>
+    public bool Scrub()
+    {
+        if (_health <= 0)
+            return true;
+        
+        _health -= 1;
+        
+        if (_health > 0)
+            return false;
+        
+        Destroy(gameObject);
+
+        return true;
+    }
+    
 }
