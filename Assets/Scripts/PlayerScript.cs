@@ -14,6 +14,8 @@ public class PlayerScript : MonoBehaviour
 
     private SpriteRenderer _spriteRenderer;
     private ParticleSystem _particleSystem;
+
+    private AudioSource _bubbleAudioSource;
     
     private readonly KeyCode _scrubButton = KeyCode.E;
 
@@ -23,6 +25,8 @@ public class PlayerScript : MonoBehaviour
         _globalScript = GameObject.FindWithTag("Global").GetComponent<GlobalScript>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _particleSystem = GetComponent<ParticleSystem>();
+
+        _bubbleAudioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -117,6 +121,9 @@ public class PlayerScript : MonoBehaviour
             
             // Do soap bubble particles
             ReleaseParticles();
+            
+            // Play bubble audio
+            PlayBubbleAudio();
         }
         
         if (!doneCleaning)
@@ -134,6 +141,14 @@ public class PlayerScript : MonoBehaviour
     private void ReleaseParticles()
     {
         _particleSystem.Emit(10);
+    }
+
+    private void PlayBubbleAudio()
+    {
+        if (_bubbleAudioSource.isPlaying)
+            return;
+        
+        _bubbleAudioSource.Play();
     }
 
 }

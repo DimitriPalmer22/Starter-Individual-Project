@@ -5,13 +5,19 @@ using UnityEngine;
 
 public class GlobalScript : MonoBehaviour
 {
+    [Header("Text")] 
     [SerializeField] private TMP_Text _timerText;
     [SerializeField] private TMP_Text _gameFinishedText;
     [SerializeField] private TMP_Text _gameIntroText;
     [SerializeField] private TMP_Text _messCountText;
-    
-    [SerializeField] private PlayerScript _player;
 
+    [Header("Audio")] 
+    [SerializeField] private AudioClip _introAudio;
+    [SerializeField] private AudioClip _gameplayAudio;
+    [SerializeField] private AudioClip _winAudio;
+    [SerializeField] private AudioClip _loseAudio;
+    private AudioSource _audioSource;
+    
     private float _timeLeft = 10;
 
     private int _messCount;
@@ -25,6 +31,9 @@ public class GlobalScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
+        PlayAudioClip(_introAudio);
+            
         CountMesses();
         SetTimerText();
 
@@ -36,12 +45,17 @@ public class GlobalScript : MonoBehaviour
     void Update()
     {
         if (!_gameStarted && Input.GetKeyDown(KeyCode.Space))
-        {
-            _gameIntroText.enabled = false;
-            _gameStarted = true;
-        }
-
+            StartGame();
+        
         UpdateTimer();
+    }
+
+    private void StartGame()
+    {
+        _gameIntroText.enabled = false;
+        _gameStarted = true;
+        
+        PlayAudioClip(_gameplayAudio);
     }
 
     /// <summary>
@@ -111,6 +125,7 @@ public class GlobalScript : MonoBehaviour
 
     /// <summary>
     /// Function used to change text displayed at the end of the game.
+    /// Also used to call the function that plays the winning and losing sounds.
     /// </summary>
     /// <param name="text">The words of the text.</param>
     /// <param name="gameWon">True = game won. False = game lost</param>
@@ -118,11 +133,32 @@ public class GlobalScript : MonoBehaviour
     {
         _gameFinishedText.enabled = true;
         _gameFinishedText.text = text;
+
+        AudioClip clip = _winAudio;
+        if (!gameWon)
+            clip = _loseAudio;
+
+        PlayAudioClip(clip);
     }
 
     private void UpdateMessCountText()
     {
         _messCountText.text = $"Garbage Remaining: {_messCount}";
+    }
+
+    private void PlayAudioClip(AudioClip clip)
+    {
+        if (clip == null)
+            return;
+
+        if (clip == _gameplayAudio)
+            _audioSource.volume = .4f;
+        else
+            _audioSource.volume = .8f;
+        
+        _audioSource.Stop();
+        _audioSource.clip = clip;
+        _audioSource.Play();
     }
     
 }
