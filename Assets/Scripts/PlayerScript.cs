@@ -135,7 +135,7 @@ public class PlayerScript : MonoBehaviour
         // If the player is done cleaning the mess,
         // release the player from isCleaning and allow them to move again
         _currentlyCleaning = null;
-        _globalScript.MessCleaned();
+        _globalScript.GarbageCleaned();
     }
 
     /// <summary>

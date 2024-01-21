@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class GlobalScript : MonoBehaviour
 {
@@ -7,7 +9,8 @@ public class GlobalScript : MonoBehaviour
     [SerializeField] private TMP_Text _timerText;
     [SerializeField] private TMP_Text _gameFinishedText;
     [SerializeField] private TMP_Text _gameIntroText;
-    [SerializeField] private TMP_Text _messCountText;
+    [SerializeField] private TMP_Text _garbageCountText;
+    [SerializeField] private TMP_Text _restartText;
 
     [Header("Audio")] 
     [SerializeField] private AudioClip _introAudio;
@@ -17,9 +20,8 @@ public class GlobalScript : MonoBehaviour
     
     private AudioSource _audioSource;
     
-    private float _timeLeft = 10;
 
-    private int _messCount;
+    private int _garbageCount;
 
     private bool _gameStarted;
     private bool _gameLost, _gameWon;
@@ -28,6 +30,8 @@ public class GlobalScript : MonoBehaviour
     public bool GameFinished => _gameLost || _gameWon;
 
     private float _introTimer = 2f;
+    private float _gameplayTimer = 10;
+    private float _postGameTimer = 2f;
     
     // Start is called before the first frame update
     void Start()
@@ -35,11 +39,12 @@ public class GlobalScript : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         PlayAudioClip(_introAudio);
             
-        CountMesses();
+        CountGarbage();
         SetTimerText(_introTimer);
 
         _gameIntroText.enabled = true;
         _gameFinishedText.enabled = false;
+        _restartText.enabled = false;
     }
 
     // Update is called once per frame
@@ -55,6 +60,28 @@ public class GlobalScript : MonoBehaviour
         }
         
         UpdateTimer();
+
+        if (GameFinished && _postGameTimer > 0)
+        {
+            _postGameTimer -= Time.deltaTime;
+            SetTimerText(_postGameTimer);
+            if (_postGameTimer <= 0)
+            {
+                _postGameTimer = 0;
+
+                _timerText.enabled = false;
+                _gameIntroText.enabled = false;
+                _garbageCountText.enabled = false;
+                _gameFinishedText.enabled = false;
+                _restartText.enabled = true;
+            }
+        }
+        
+        else if (_postGameTimer <= 0)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+                SceneManager.LoadScene(0);
+        }
     }
 
     private void StartGame()
@@ -66,27 +93,27 @@ public class GlobalScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the messCount variable.
+    /// Updates the garbageCount variable.
     /// Only needs to be called in the start function
     /// </summary>
-    private void CountMesses()
+    private void CountGarbage()
     {
-        _messCount = GameObject.FindGameObjectsWithTag("Mess").Length;
-        UpdateMessCountText();
+        _garbageCount = GameObject.FindGameObjectsWithTag("Mess").Length;
+        UpdateGarbageCountText();
     }
 
     /// <summary>
     /// Called by the player script.
-    /// Decrements the mess count variable.
+    /// Decrements the garbage count variable.
     /// Checks if the player has won the game.
     /// </summary>
-    public void MessCleaned()
+    public void GarbageCleaned()
     {
-        _messCount -= 1;
-        UpdateMessCountText();
+        _garbageCount -= 1;
+        UpdateGarbageCountText();
         
         // Win Condition
-        if (_messCount <= 0 && _timeLeft > 0)
+        if (_garbageCount <= 0 && _gameplayTimer > 0)
         {
             _gameWon = true;
             _gameLost = false;
@@ -103,14 +130,14 @@ public class GlobalScript : MonoBehaviour
         if (!GameStarted || GameFinished)
             return;
         
-        _timeLeft -= Time.deltaTime;
+        _gameplayTimer -= Time.deltaTime;
 
-        if (_timeLeft < 0)
+        if (_gameplayTimer < 0)
         {
-            _timeLeft = 0;
+            _gameplayTimer = 0;
 
             // Lose Condition
-            if (_messCount > 0)
+            if (_garbageCount > 0)
             {
                 _gameLost = true;
                 _gameWon = false;
@@ -119,7 +146,7 @@ public class GlobalScript : MonoBehaviour
             
         }
         
-        SetTimerText(_timeLeft);
+        SetTimerText(_gameplayTimer);
     }
     
     /// <summary>
@@ -148,9 +175,9 @@ public class GlobalScript : MonoBehaviour
         PlayAudioClip(clip);
     }
 
-    private void UpdateMessCountText()
+    private void UpdateGarbageCountText()
     {
-        _messCountText.text = $"Garbage Remaining: {_messCount}";
+        _garbageCountText.text = $"Garbage Remaining: {_garbageCount}";
     }
 
     private void PlayAudioClip(AudioClip clip)
