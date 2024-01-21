@@ -18,6 +18,8 @@ public class PlayerScript : MonoBehaviour
     private AudioSource _bubbleAudioSource;
     
     private readonly KeyCode _scrubButton = KeyCode.E;
+    
+    private Rigidbody2D _rb;
 
 
     private void Start()
@@ -27,6 +29,7 @@ public class PlayerScript : MonoBehaviour
         _particleSystem = GetComponent<ParticleSystem>();
 
         _bubbleAudioSource = GetComponent<AudioSource>();
+        _rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -52,7 +55,7 @@ public class PlayerScript : MonoBehaviour
 
         var movementVector = new Vector3(horizontalMovement, verticalMovement, 0).normalized;
 
-        transform.position += movementVector * (movementSpeed * Time.deltaTime);
+        _rb.velocity = movementVector * movementSpeed;
         
         // Flip the sprite left or right depending on the movement
         // This code assumes the original sprite is already facing right
