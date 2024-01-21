@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,8 @@ public class PlayerScript : MonoBehaviour
 {
     // how close the player has to be to a mess before they are able to start cleaning it
     private const float MessCleanProximity = 1.5f;
+
+    private GlobalScript _globalScript;
     
     private MessScript _currentlyCleaning;
 
@@ -19,9 +22,17 @@ public class PlayerScript : MonoBehaviour
 
     private bool _isCleaning = false;
 
+    private void Start()
+    {
+        _globalScript = GameObject.FindWithTag("Global").GetComponent<GlobalScript>();
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (_globalScript.GameFinished)
+            return;
+        
         MovementInput();
         ProximityCheck();
         StartCleaningInput();
@@ -126,5 +137,6 @@ public class PlayerScript : MonoBehaviour
         // release the player from isCleaning and allow them to move again
         _isCleaning = false;
         _currentlyCleaning = null;
+        _globalScript.MessCleaned();
     }
 }
