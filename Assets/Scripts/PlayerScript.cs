@@ -11,17 +11,21 @@ public class PlayerScript : MonoBehaviour
     private MessScript _currentlyCleaning;
 
     [SerializeField] private float movementSpeed = 4;
+
+    private SpriteRenderer _spriteRenderer;
     
     private readonly KeyCode _scrubButton = KeyCode.E;
 
     private void Start()
     {
         _globalScript = GameObject.FindWithTag("Global").GetComponent<GlobalScript>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Completely disables the player's script if the game hasn't started or the game has ended.
         if (!_globalScript.GameStarted || _globalScript.GameFinished)
             return;
         
@@ -32,7 +36,7 @@ public class PlayerScript : MonoBehaviour
 
     /// <summary>
     /// Use WASD to move around.
-    /// Disables movement while cleaning.
+    /// Flip the player's sprite depending on which direction they are moving.
     /// </summary>
     private void MovementInput()
     {
@@ -42,6 +46,14 @@ public class PlayerScript : MonoBehaviour
         var movementVector = new Vector3(horizontalMovement, verticalMovement, 0).normalized;
 
         transform.position += movementVector * (movementSpeed * Time.deltaTime);
+        
+        // Flip the sprite left or right depending on the movement
+        // This code assumes the original sprite is already facing right
+        if (movementVector.x < 0)
+            _spriteRenderer.flipX = true;
+        else
+            _spriteRenderer.flipX = false;
+        
     }
 
     /// <summary>
@@ -86,7 +98,7 @@ public class PlayerScript : MonoBehaviour
 
     /// <summary>
     /// Press Q and E rapidly to scrub away the messes.
-    /// This function only runs if the player is cleaning.
+    /// This function only runs if there is a mess in the player's proximity.
     /// </summary>
     private void ScrubInput()
     {

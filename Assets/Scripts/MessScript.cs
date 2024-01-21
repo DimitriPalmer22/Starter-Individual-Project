@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class MessScript : MonoBehaviour
 {
-
     [SerializeField] private TMP_Text _healthText;
     [SerializeField] private int _health = 8;
 
