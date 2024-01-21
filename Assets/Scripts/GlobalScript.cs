@@ -16,6 +16,7 @@ public class GlobalScript : MonoBehaviour
     [SerializeField] private AudioClip _gameplayAudio;
     [SerializeField] private AudioClip _winAudio;
     [SerializeField] private AudioClip _loseAudio;
+    
     private AudioSource _audioSource;
     
     private float _timeLeft = 10;
@@ -27,6 +28,8 @@ public class GlobalScript : MonoBehaviour
 
     public bool GameStarted => _gameStarted;
     public bool GameFinished => _gameLost || _gameWon;
+
+    private float _introTimer = 2f;
     
     // Start is called before the first frame update
     void Start()
@@ -44,8 +47,12 @@ public class GlobalScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_gameStarted && Input.GetKeyDown(KeyCode.Space))
-            StartGame();
+        if (!_gameStarted)
+        {
+            _introTimer -= Time.deltaTime;
+            if (_introTimer <= 0)
+                StartGame();
+        }
         
         UpdateTimer();
     }
