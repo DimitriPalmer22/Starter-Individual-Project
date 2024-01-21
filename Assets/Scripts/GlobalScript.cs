@@ -38,7 +38,7 @@ public class GlobalScript : MonoBehaviour
         PlayAudioClip(_introAudio);
             
         CountMesses();
-        SetTimerText();
+        SetTimerText(_introTimer);
 
         _gameIntroText.enabled = true;
         _gameFinishedText.enabled = false;
@@ -50,6 +50,8 @@ public class GlobalScript : MonoBehaviour
         if (!_gameStarted)
         {
             _introTimer -= Time.deltaTime;
+            SetTimerText(_introTimer);
+            
             if (_introTimer <= 0)
                 StartGame();
         }
@@ -119,15 +121,15 @@ public class GlobalScript : MonoBehaviour
             
         }
         
-        SetTimerText();
+        SetTimerText(_timeLeft);
     }
     
     /// <summary>
     /// Updates the UI element that has the timer info.
     /// </summary>
-    private void SetTimerText()
+    private void SetTimerText(float time)
     {
-        _timerText.text = $"Time Left:\n{_timeLeft}";
+        _timerText.text = $"Time Left:\n{time}";
     }
 
     /// <summary>
