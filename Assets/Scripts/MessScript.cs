@@ -9,8 +9,12 @@ public class MessScript : MonoBehaviour
     [SerializeField] private TMP_Text _healthText;
     [SerializeField] private int _health = 8;
 
+    private SpriteRenderer _spriteRenderer;
+    
     void Start()
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
         _healthText.enabled = false;
         UpdateHealthText();
     }
@@ -18,7 +22,6 @@ public class MessScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     /// <summary>
@@ -44,7 +47,7 @@ public class MessScript : MonoBehaviour
 
     private void UpdateHealthText()
     {
-        _healthText.text = $"{_health}";
+        _healthText.text = $"Press E\n{_health} time(s)!";
     }
 
     public void EnableHealthText()
@@ -56,5 +59,5 @@ public class MessScript : MonoBehaviour
     {
         _healthText.enabled = false;
     }
-
+    
 }

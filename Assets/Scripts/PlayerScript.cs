@@ -49,11 +49,11 @@ public class PlayerScript : MonoBehaviour
         
         // Flip the sprite left or right depending on the movement
         // This code assumes the original sprite is already facing right
-        if (movementVector.x < 0)
+        if (movementVector.x < 0) // going left
             _spriteRenderer.flipX = true;
-        else
+        else if (movementVector.x > 0) // going right
             _spriteRenderer.flipX = false;
-        
+
     }
 
     /// <summary>
@@ -119,4 +119,5 @@ public class PlayerScript : MonoBehaviour
         _currentlyCleaning = null;
         _globalScript.MessCleaned();
     }
+
 }

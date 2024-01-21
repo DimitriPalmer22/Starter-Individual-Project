@@ -69,7 +69,7 @@ public class GlobalScript : MonoBehaviour
         {
             _gameWon = true;
             _gameLost = false;
-            SetGameFinishedText("You Win.\nYou cleaned all the messes!", true);
+            SetGameFinishedText("You Win!\nYou cleaned all the messes!", true);
         }
     }
 
