@@ -15,12 +15,7 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField] private float movementSpeed = 4;
     
-    private KeyCode _cleanButton = KeyCode.E;
-    private KeyCode _scrubButton1 = KeyCode.Q;
-    private KeyCode _scrubButton2 = KeyCode.E;
-    private bool _scrubState; // if false, press scrub button 1, else, press scrub button 2
-
-    private bool _isCleaning = false;
+    private KeyCode _scrubButton = KeyCode.E;
 
     private void Start()
     {
@@ -35,7 +30,6 @@ public class PlayerScript : MonoBehaviour
         
         MovementInput();
         ProximityCheck();
-        StartCleaningInput();
         ScrubInput();
     }
 
@@ -45,9 +39,6 @@ public class PlayerScript : MonoBehaviour
     /// </summary>
     private void MovementInput()
     {
-        if (_isCleaning)
-            return;
-        
         var horizontalMovement = Input.GetAxisRaw("Horizontal");
         var verticalMovement = Input.GetAxisRaw("Vertical");
 
@@ -62,9 +53,6 @@ public class PlayerScript : MonoBehaviour
     /// </summary>
     private void ProximityCheck()
     {
-        if (_isCleaning)
-            return;
-        
         // Get all mess objects
         var messObjects = GameObject.FindGameObjectsWithTag("Mess");
         
@@ -92,50 +80,25 @@ public class PlayerScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Use E to start cleaning messes.
-    /// This function puts the player into the isCleaning state.
-    /// Skips the function if the player is already cleaning.
-    /// </summary>
-    private void StartCleaningInput()
-    {
-        if (_isCleaning || _currentlyCleaning == null)
-            return;
-
-        if (Input.GetKeyDown(_cleanButton))
-        {
-            _isCleaning = true;
-        }
-    }
-
-    /// <summary>
     /// Press Q and E rapidly to scrub away the messes.
     /// This function only runs if the player is cleaning.
     /// </summary>
     private void ScrubInput()
     {
-        if (!_isCleaning || _currentlyCleaning == null)
+        if (_currentlyCleaning == null)
             return;
         
         bool doneCleaning = false;
 
-        // Press Q when prompted
-        bool qPressedProperly = !_scrubState && Input.GetKeyDown(_scrubButton1);
-        // Press E when prompted
-        bool ePressedProperly = _scrubState && Input.GetKeyDown(_scrubButton2);
-        
         // Scrub the mess
-        if (qPressedProperly || ePressedProperly)
-        {
+        if (Input.GetKeyDown(_scrubButton))
             doneCleaning = _currentlyCleaning.Scrub();
-            _scrubState = !_scrubState;
-        }   
         
         if (!doneCleaning)
             return;
         
         // If the player is done cleaning the mess,
         // release the player from isCleaning and allow them to move again
-        _isCleaning = false;
         _currentlyCleaning = null;
         _globalScript.MessCleaned();
     }

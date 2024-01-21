@@ -103,7 +103,7 @@ public class GlobalScript : MonoBehaviour
     /// </summary>
     private void SetTimerText()
     {
-        _timerText.text = $"Time Left: {_timeLeft}";
+        _timerText.text = $"Time Left:\n{_timeLeft}";
     }
 
     private void SetGameFinishedText(string text)
