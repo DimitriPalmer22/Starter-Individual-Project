@@ -8,12 +8,13 @@ public class GlobalScript : MonoBehaviour
     [SerializeField] private TMP_Text _timerText;
     [SerializeField] private TMP_Text _gameFinishedText;
     [SerializeField] private TMP_Text _gameIntroText;
+    [SerializeField] private TMP_Text _messCountText;
     
     [SerializeField] private PlayerScript _player;
 
     private float _timeLeft = 10;
 
-    private int messCount;
+    private int _messCount;
 
     private bool _gameStarted;
     private bool _gameLost, _gameWon;
@@ -49,7 +50,8 @@ public class GlobalScript : MonoBehaviour
     /// </summary>
     private void CountMesses()
     {
-        messCount = GameObject.FindGameObjectsWithTag("Mess").Length;
+        _messCount = GameObject.FindGameObjectsWithTag("Mess").Length;
+        UpdateMessCountText();
     }
 
     /// <summary>
@@ -59,14 +61,15 @@ public class GlobalScript : MonoBehaviour
     /// </summary>
     public void MessCleaned()
     {
-        messCount -= 1;
+        _messCount -= 1;
+        UpdateMessCountText();
         
         // Win Condition
-        if (messCount <= 0 && _timeLeft > 0)
+        if (_messCount <= 0 && _timeLeft > 0)
         {
             _gameWon = true;
             _gameLost = false;
-            SetGameFinishedText("You Win.\nYou cleaned all the messes!");
+            SetGameFinishedText("You Win.\nYou cleaned all the messes!", true);
         }
     }
 
@@ -86,11 +89,11 @@ public class GlobalScript : MonoBehaviour
             _timeLeft = 0;
 
             // Lose Condition
-            if (messCount > 0)
+            if (_messCount > 0)
             {
                 _gameLost = true;
                 _gameWon = false;
-                SetGameFinishedText("You Lose.\nYou failed to clean all the messes in 10 seconds.");
+                SetGameFinishedText("You Lose.\nYou failed to clean all the messes in 10 seconds.", false);
             }
             
         }
@@ -106,10 +109,20 @@ public class GlobalScript : MonoBehaviour
         _timerText.text = $"Time Left:\n{_timeLeft}";
     }
 
-    private void SetGameFinishedText(string text)
+    /// <summary>
+    /// Function used to change text displayed at the end of the game.
+    /// </summary>
+    /// <param name="text">The words of the text.</param>
+    /// <param name="gameWon">True = game won. False = game lost</param>
+    private void SetGameFinishedText(string text, bool gameWon)
     {
         _gameFinishedText.enabled = true;
         _gameFinishedText.text = text;
+    }
+
+    private void UpdateMessCountText()
+    {
+        _messCountText.text = $"Dirt Remaining: {_messCount}";
     }
     
 }
