@@ -30,7 +30,7 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_globalScript.GameFinished)
+        if (!_globalScript.GameStarted || _globalScript.GameFinished)
             return;
         
         MovementInput();

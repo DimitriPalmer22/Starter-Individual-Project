@@ -6,14 +6,19 @@ using UnityEngine;
 public class GlobalScript : MonoBehaviour
 {
     [SerializeField] private TMP_Text _timerText;
+    [SerializeField] private TMP_Text _gameFinishedText;
+    [SerializeField] private TMP_Text _gameIntroText;
+    
     [SerializeField] private PlayerScript _player;
 
     private float _timeLeft = 10;
 
     private int messCount;
 
+    private bool _gameStarted;
     private bool _gameLost, _gameWon;
 
+    public bool GameStarted => _gameStarted;
     public bool GameFinished => _gameLost || _gameWon;
     
     // Start is called before the first frame update
@@ -21,11 +26,20 @@ public class GlobalScript : MonoBehaviour
     {
         CountMesses();
         SetTimerText();
+
+        _gameIntroText.enabled = true;
+        _gameFinishedText.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!_gameStarted && Input.GetKeyDown(KeyCode.Space))
+        {
+            _gameIntroText.enabled = false;
+            _gameStarted = true;
+        }
+
         UpdateTimer();
     }
 
@@ -52,6 +66,7 @@ public class GlobalScript : MonoBehaviour
         {
             _gameWon = true;
             _gameLost = false;
+            SetGameFinishedText("You Win.\nYou cleaned all the messes!");
         }
     }
 
@@ -61,7 +76,7 @@ public class GlobalScript : MonoBehaviour
     /// </summary>
     private void UpdateTimer()
     {
-        if (GameFinished)
+        if (!GameStarted || GameFinished)
             return;
         
         _timeLeft -= Time.deltaTime;
@@ -75,6 +90,7 @@ public class GlobalScript : MonoBehaviour
             {
                 _gameLost = true;
                 _gameWon = false;
+                SetGameFinishedText("You Lose.\nYou failed to clean all the messes in 10 seconds.");
             }
             
         }
@@ -89,4 +105,11 @@ public class GlobalScript : MonoBehaviour
     {
         _timerText.text = $"Time Left: {_timeLeft}";
     }
+
+    private void SetGameFinishedText(string text)
+    {
+        _gameFinishedText.enabled = true;
+        _gameFinishedText.text = text;
+    }
+    
 }
