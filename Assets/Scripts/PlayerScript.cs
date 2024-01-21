@@ -35,6 +35,8 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _rb.velocity = Vector2.zero;
+        
         // Completely disables the player's script if the game hasn't started or the game has ended.
         if (!_globalScript.GameStarted || _globalScript.GameFinished)
             return;
@@ -43,7 +45,7 @@ public class PlayerScript : MonoBehaviour
         ProximityCheck();
         ScrubInput();
     }
-
+    
     /// <summary>
     /// Use WASD to move around.
     /// Flip the player's sprite depending on which direction they are moving.
