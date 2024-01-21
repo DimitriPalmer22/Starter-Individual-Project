@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -15,7 +12,7 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField] private float movementSpeed = 4;
     
-    private KeyCode _scrubButton = KeyCode.E;
+    private readonly KeyCode _scrubButton = KeyCode.E;
 
     private void Start()
     {
@@ -56,6 +53,13 @@ public class PlayerScript : MonoBehaviour
         // Get all mess objects
         var messObjects = GameObject.FindGameObjectsWithTag("Mess");
         
+        // Disable all the mess objects' texts
+        foreach (var messObject in messObjects)
+        {
+            var messScript = messObject.GetComponent<MessScript>();
+            messScript.DisableHealthText();
+        }
+        
         // If there are no more messes, skip this function
         if (messObjects.Length <= 0)
         {
@@ -77,6 +81,7 @@ public class PlayerScript : MonoBehaviour
         }
         
         _currentlyCleaning = closestMess.GetComponent<MessScript>();
+        _currentlyCleaning.EnableHealthText();
     }
 
     /// <summary>

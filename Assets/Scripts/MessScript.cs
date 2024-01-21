@@ -1,11 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class MessScript : MonoBehaviour
 {
 
-    private int _health = 8;
+    [SerializeField] private TMP_Text _healthText;
+    [SerializeField] private int _health = 8;
+
+    void Start()
+    {
+        _healthText.enabled = false;
+        UpdateHealthText();
+    }
 
     // Update is called once per frame
     void Update()
@@ -24,6 +33,7 @@ public class MessScript : MonoBehaviour
             return true;
         
         _health -= 1;
+        UpdateHealthText();
         
         if (_health > 0)
             return false;
@@ -32,5 +42,20 @@ public class MessScript : MonoBehaviour
 
         return true;
     }
-    
+
+    private void UpdateHealthText()
+    {
+        _healthText.text = $"{_health}";
+    }
+
+    public void EnableHealthText()
+    {
+        _healthText.enabled = true;
+    }
+
+    public void DisableHealthText()
+    {
+        _healthText.enabled = false;
+    }
+
 }
