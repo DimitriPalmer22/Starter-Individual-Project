@@ -69,7 +69,7 @@ public class GlobalScript : MonoBehaviour
         {
             _gameWon = true;
             _gameLost = false;
-            SetGameFinishedText("You Win!\nYou cleaned all the messes!", true);
+            SetGameFinishedText("You Win!\nYou cleaned all the garbage!", true);
         }
     }
 
@@ -93,7 +93,7 @@ public class GlobalScript : MonoBehaviour
             {
                 _gameLost = true;
                 _gameWon = false;
-                SetGameFinishedText("You Lose.\nYou failed to clean all the messes in 10 seconds.", false);
+                SetGameFinishedText("You Lose.\nYou failed to clean all the garbage within 10 seconds.", false);
             }
             
         }
@@ -122,7 +122,7 @@ public class GlobalScript : MonoBehaviour
 
     private void UpdateMessCountText()
     {
-        _messCountText.text = $"Dirt Remaining: {_messCount}";
+        _messCountText.text = $"Garbage Remaining: {_messCount}";
     }
     
 }

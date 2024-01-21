@@ -13,13 +13,16 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float movementSpeed = 4;
 
     private SpriteRenderer _spriteRenderer;
+    private ParticleSystem _particleSystem;
     
     private readonly KeyCode _scrubButton = KeyCode.E;
+
 
     private void Start()
     {
         _globalScript = GameObject.FindWithTag("Global").GetComponent<GlobalScript>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _particleSystem = GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -109,7 +112,12 @@ public class PlayerScript : MonoBehaviour
 
         // Scrub the mess
         if (Input.GetKeyDown(_scrubButton))
+        {
             doneCleaning = _currentlyCleaning.Scrub();
+            
+            // Do soap bubble particles
+            ReleaseParticles();
+        }
         
         if (!doneCleaning)
             return;
@@ -118,6 +126,14 @@ public class PlayerScript : MonoBehaviour
         // release the player from isCleaning and allow them to move again
         _currentlyCleaning = null;
         _globalScript.MessCleaned();
+    }
+
+    /// <summary>
+    /// Make the particle system release a wave of bubbles.
+    /// </summary>
+    private void ReleaseParticles()
+    {
+        _particleSystem.Emit(10);
     }
 
 }
